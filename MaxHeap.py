@@ -1,6 +1,6 @@
 import math
 
-class MinHeap:
+class MaxHeap:
     def __init__(self,capacity):
         #capactity is max elements you to want to store within the heap first
         self.storage = [0] * capacity
@@ -46,7 +46,7 @@ class MinHeap:
         self.storage[index2] = temp
         
     def heapifyUp(self, index):
-        if (self.hasParent(index) and self.parent(index) > self.storage[index]):
+        if (self.hasParent(index) and self.parent(index) < self.storage[index]):
             self.swap(self.getParentIndex(index), index)
             self.heapifyUp(self.getParentIndex(index))
     
@@ -67,17 +67,14 @@ class MinHeap:
         return data
     
     def heapifyDown(self, index):
-        smallest = index
-        if (self.hasLeftChild(index) and self.storage[smallest] > self.leftChild(index)):
-            smallest = self.getLeftChildIndex(index)
-        if (self.hasRightChild(index) and self.storage[smallest] > self.rightChild(index)):
-            smallest = self.getRightChildIndex(index)
-        if (smallest != index):
-            self.swap(index, smallest)
-            self.heapifyDown(smallest)
-
-
-
+        largest = index
+        if (self.hasLeftChild(index) and self.storage[largest] < self.leftChild(index)):
+            largest = self.getLeftChildIndex(index)
+        if (self.hasRightChild(index) and self.storage[largest] < self.rightChild(index)):
+            largest = self.getRightChildIndex(index)
+        if (largest != index):
+            self.swap(index, largest)
+            self.heapifyDown(largest)
 
     def print_heap_tree(self, index, level):
         """Prints a heap as a tree structure."""
@@ -105,8 +102,9 @@ class MinHeap:
 
 if __name__ == "__main__":
     values = [20, 10 , 5, 8, 15, 30, 9,0,1]
-    h = MinHeap(len(values))
+    h = MaxHeap(len(values))
     for val in values:
         h.insert(val)
     print(h.storage)
     h.print_heap_tree(0,0)
+

@@ -1,6 +1,6 @@
 from collections import defaultdict,Counter, deque
-import heapq
 from collections import defaultdict
+import MinHeap
 
 def valid_Palindrome_2(s):
     '''
@@ -200,24 +200,28 @@ def longest_substring_k_distinct(s, k):
 
  #Sliding Window Median 
 def sliding_window_median(nums, k):
+    ''''
+    sliding_window_median([1, 3, -1, -3, 5, 3, 6, 7], 3)
+    '''
     result = []
-    lo = []  # Max-heap (as negative numbers)
-    hi = []  # Min-heap
+
+    lo = MinHeap.MinHeap(len(nums))  # Max-heap (as negative numbers)
+    hi = MinHeap.MinHeap(len(nums)) # Min-heap
     delayed = defaultdict(int)
     median = 0
 
     for i in range(k):
-        heapq.heappush(lo, -nums[i])
-        heapq.heappush(hi, -heapq.heappop(lo))
+        lo.insert(-nums[i])
+        hi.insert(-lo.removeMin())
         
-        if len(hi) > len(lo):
-            heapq.heappush(lo, -heapq.heappop(hi))
+        if hi.size > lo.size:
+            lo.insert(-hi.removeMin())
 
     if k % 2 == 1:
-        median = float(-lo[0])
+        median = float(-lo.storage[0])
         result.append(median)
     else:
-        median = (-lo[0] + hi[0])/2
+        median = (-lo.storage[0] + hi.storage[0])/2
         result.append(median)
 
     for i in range(k, len(nums)):
@@ -228,29 +232,31 @@ def sliding_window_median(nums, k):
 
         if nums[i] <= median:
             balance += 1
-            heapq.heappush(lo, -nums[i])
+            lo.insert(-nums[i])
         else:
             balance -= 1
-            heapq.heappush(hi, nums[i])
+            hi.insert(nums[i])
 
         if balance < 0:
-            heapq.heappush(lo, -heapq.heappop(hi))
+            lo.insert(-hi.removeMin())
         elif balance > 0:
-            heapq.heappush(hi, -heapq.heappop(lo))
+            hi.insert(-lo.removeMin())
 
-        while lo and delayed[-lo[0]] > 0:
-            delayed[-lo[0]] -= 1
-            heapq.heappop(lo)
+
+        while lo and delayed[-lo.storage[0]] > 0:
+            delayed[-lo.storage[0]] -= 1
+            lo.removeMin()
+
         
-        while hi and delayed[hi[0]] > 0:
-            delayed[hi[0]] -= 1
-            heapq.heappop(hi)
+        while hi and delayed[hi.storage[0]] > 0:
+            delayed[hi.storage[0]] -= 1
+            hi.removeMin()
 
         if k % 2 == 1:
-            median = float(-lo[0])
+            median = float(-lo.storage[0])
             result.append(median)
         else:
-            median = (-lo[0] + hi[0])/2
+            median = (-lo.storage[0] + hi.storage[0])/2
             result.append(median)
 
     return result
@@ -312,6 +318,19 @@ def minimum_window_substring(s, t):
 
     return res
 
+def top_K_Frequent_Elements(nums, k):
+    result_dic = {}
+    result = []
+    for num in nums:
+        if num is result_dic:
+            result_dic[num] += 1
+        else:
+            result_dic[num] = result_dic.get(num, 0) + 1
+    
+    for ele,count in result_dic:
+        result_dic[ele] 
+    return result
+
 
 if __name__ == "__main__":
     print("--------------------------------------------")
@@ -337,6 +356,7 @@ if __name__ == "__main__":
 
     print(sliding_window_median([1, 3, -1, -3, 5, 3, 6, 7], 3))
 
+    
 
 
 

@@ -1,6 +1,6 @@
 from collections import defaultdict,Counter, deque
 from collections import defaultdict
-import MinHeap
+import CodingPratices.MinHeap as MinHeap
 
 def valid_Palindrome_2(s):
     '''
